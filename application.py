@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import traceback
+from selenium import webdriver
 
 
 application=Flask(__name__)
@@ -21,10 +22,14 @@ def review():
         next_page=True
         while next_page: 
             url=f"https://www.flipkart.com/{query}/product-reviews/itmfbeb0684432d7?pid=MOBGHWFHR4ZYUPH5&lid=LSTMOBGHWFHR4ZYUPH5XVPV0K&marketplace=FLIPKART&page={current_page}"
-            response = requests.get(url)
-
+            driver = webdriver.Chrome()
+            response = driver.get(url)
+            read_more_button = driver.find_element("div", class_="_1H-bmy")
+            read_more_button.click()
+            #print(response.text)
             try:           
-                soup=BeautifulSoup(response.content, "html.parser")
+                soup=BeautifulSoup(driver.page_source, "html.parser")
+                driver.quit()
                 reviews=[]
                 review_length=len(reviews)
 
@@ -55,7 +60,7 @@ def review():
             writer = csv.writer(file)
             writer.writerow(['review_title','review_author','review_rating','review_comment'])
             writer.writerows(all_review_data)
-        return "reviews collected"              
+        return render_template('result.html', reviews=all_review_data)             
     else:
         return render_template('index.html')
 
