@@ -22,12 +22,12 @@ def review():
         next_page=True
         while next_page: 
             url=f"https://www.flipkart.com/{query}/product-reviews/itmfbeb0684432d7?pid=MOBGHWFHR4ZYUPH5&lid=LSTMOBGHWFHR4ZYUPH5XVPV0K&marketplace=FLIPKART&page={current_page}"
-            response = response.get(url)
+            response = requests.get(url)
             #print(response.text)
             try:           
-                soup=BeautifulSoup(driver.page_source, "html.parser")
+                soup=BeautifulSoup(response.content, "html.parser")
                 reviews=[]
-                review_length=len(reviews)
+                #review_length=len(reviews)
 
                 for i in soup.find_all("div", class_="_27M-vq"):
                     print(i)
@@ -56,9 +56,9 @@ def review():
             writer = csv.writer(file)
             writer.writerow(['review_title','review_author','review_rating','review_comment'])
             writer.writerows(all_review_data)
-        return render_template('result.html', reviews=all_review_data)             
+        return "reviews collected"         
     else:
-        return "reviews collected"
+        return render_template('index.html')
 
 if __name__=='__main__':
     application.run(debug=True)
