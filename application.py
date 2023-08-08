@@ -56,7 +56,7 @@ def review():
             writer = csv.writer(file)
             writer.writerow(['review_title','review_author','review_rating','review_comment'])
             writer.writerows(all_review_data)
-        return "reviews collected"         
+        return render_template('result.html', reviews=all_review_data)         
     else:
         return render_template('index.html')
 
