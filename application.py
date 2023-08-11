@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import csv
 import traceback
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 
 application=Flask(__name__)
@@ -16,13 +17,20 @@ def home():
 @application.route('/review', methods=['POST', 'GET'])
 def review():
     if request.method=='POST':
+        #driver = webdriver.Chrome()
         current_page=1
         query = request.form['content'].replace(" ","")
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"}
         all_review_data=[]
         next_page=True
         while next_page: 
             url=f"https://www.flipkart.com/{query}/product-reviews/itmfbeb0684432d7?pid=MOBGHWFHR4ZYUPH5&lid=LSTMOBGHWFHR4ZYUPH5XVPV0K&marketplace=FLIPKART&page={current_page}"
             response = requests.get(url)
+            #response_more=driver.get(url)
+            #print(response_more)
+            #driver.find_element('xpath', '//*[@id="container"]/div/div[3]/div/div/div[2]/div[3]/div/div/div/div[2]/div/div/div')
+            #print(comment)
+            
             #print(response.text)
             try:           
                 soup=BeautifulSoup(response.content, "html.parser")
